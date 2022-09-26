@@ -58,27 +58,32 @@ export const HomePage = () => {
     const isSmallScreen = useMediaQuery('(max-width:375px)');
     const { user } = useContext(AuthContext);
 
-    const q = query(collection(db, 'todos'), where('userId', '==', user?.uid));
-
-    const subscribeToTodos = () => {
-        return onSnapshot(q, (querySnapshot) => {
-            const todos: Todo[] = [];
-            querySnapshot.forEach((doc) => {
-                const todoItem = {
-                    id: doc.id,
-                    ...doc.data(),
-                };
-                todos.push(todoItem as Todo);
-            });
-            setTodos(todos);
-        });
-    };
-
     useEffect(() => {
-        const unsub = subscribeToTodos();
+        if (user) {
+            const q = query(
+                collection(db, 'todos'),
+                where('userId', '==', user?.uid)
+            );
 
-        return unsub;
-    }, []);
+            const subscribeToTodos = () => {
+                return onSnapshot(q, (querySnapshot) => {
+                    const todos: Todo[] = [];
+                    querySnapshot.forEach((doc) => {
+                        const todoItem = {
+                            id: doc.id,
+                            ...doc.data(),
+                        };
+                        todos.push(todoItem as Todo);
+                    });
+                    setTodos(todos);
+                });
+            };
+
+            const unsub = subscribeToTodos();
+
+            return unsub;
+        }
+    }, [user]);
 
     const handleRadioCheck = (todo: Todo) => {
         if (todo.id) {
