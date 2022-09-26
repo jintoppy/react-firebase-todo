@@ -1,8 +1,7 @@
-import React, { useState, KeyboardEvent, useContext } from 'react';
+import React, { KeyboardEvent, useContext } from 'react';
 import Box from '@mui/material/Box';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
-import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
@@ -10,7 +9,6 @@ import { AuthContext } from '../../providers/auth';
 import { TodoCard } from '../todo-card';
 
 export const AddTodo = () => {
-    const [todoText, setTodoText] = useState();
     const { user } = useContext(AuthContext);
 
     const onKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
