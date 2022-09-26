@@ -2,7 +2,6 @@ import React, { FC, useContext, useEffect, useState, ReactNode } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
     collection,
-    DocumentData,
     updateDoc,
     onSnapshot,
     doc,
@@ -12,7 +11,6 @@ import {
 } from 'firebase/firestore';
 import Grid from '@mui/material/Grid';
 import Radio from '@mui/material/Radio';
-import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import List from '@mui/material/List';
@@ -62,8 +60,8 @@ export const HomePage = () => {
 
     const q = query(collection(db, 'todos'), where('userId', '==', user?.uid));
 
-    useEffect(() => {
-        const unsub = onSnapshot(q, (querySnapshot) => {
+    const subscribeToTodos = () => {
+        return onSnapshot(q, (querySnapshot) => {
             const todos: Todo[] = [];
             querySnapshot.forEach((doc) => {
                 const todoItem = {
@@ -74,6 +72,10 @@ export const HomePage = () => {
             });
             setTodos(todos);
         });
+    };
+
+    useEffect(() => {
+        const unsub = subscribeToTodos();
 
         return unsub;
     }, []);
