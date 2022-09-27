@@ -5,7 +5,6 @@ import {
     GoogleAuthProvider,
     getAuth,
     signInWithPopup,
-    User,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
 } from 'firebase/auth';
@@ -21,7 +20,7 @@ const auth = getAuth();
 export const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { user, setUser } = useContext(AuthContext);
+    const { setUser } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const setEmailValue = (event: ChangeEvent<HTMLInputElement>) => {
@@ -35,10 +34,6 @@ export const LoginPage = () => {
     const signInWithGoogle = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                const credential =
-                    GoogleAuthProvider.credentialFromResult(result);
-                const token = credential?.accessToken;
                 // The signed-in user info.
                 const user = result.user;
                 if (user && setUser) {
@@ -50,15 +45,6 @@ export const LoginPage = () => {
             })
             .catch((error) => {
                 console.log(error);
-                // Handle Errors here.
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // The email of the user's account used.
-                const email = error.customData.email;
-                // The AuthCredential type that was used.
-                const credential =
-                    GoogleAuthProvider.credentialFromError(error);
-                // ...
             });
     };
 
@@ -75,9 +61,7 @@ export const LoginPage = () => {
                 // ...
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // ..
+                console.log(error);
             });
     };
 
@@ -90,13 +74,9 @@ export const LoginPage = () => {
                     setUser(user);
                     navigate('/');
                 }
-
-                // ...
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // ..
+                console.log(error);
             });
     };
 
