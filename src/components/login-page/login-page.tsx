@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, useContext } from 'react';
 import TextField from '@mui/material/TextField';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import {
     GoogleAuthProvider,
     getAuth,
@@ -20,8 +20,7 @@ const auth = getAuth();
 export const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { setUser } = useContext(AuthContext);
-    const navigate = useNavigate();
+    const { user, setUser } = useContext(AuthContext);
 
     const setEmailValue = (event: ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -38,7 +37,6 @@ export const LoginPage = () => {
                 const user = result.user;
                 if (user && setUser) {
                     setUser(user);
-                    navigate('/');
                 }
 
                 // ...
@@ -55,7 +53,6 @@ export const LoginPage = () => {
                 const user = userCredential.user;
                 if (user && setUser) {
                     setUser(user);
-                    navigate('/');
                 }
 
                 // ...
@@ -72,7 +69,6 @@ export const LoginPage = () => {
                 const user = userCredential.user;
                 if (user && setUser) {
                     setUser(user);
-                    navigate('/');
                 }
             })
             .catch((error) => {
@@ -81,37 +77,40 @@ export const LoginPage = () => {
     };
 
     return (
-        <Card>
-            <CardContent sx={{ '& .MuiTextField-root': { mb: 2 } }}>
-                <TextField
-                    id="filled-basic"
-                    value={email}
-                    onChange={setEmailValue}
-                    fullWidth
-                    label="Email"
-                    variant="filled"
-                />
-                <TextField
-                    id="filled-basic"
-                    label="Password"
-                    value={password}
-                    fullWidth
-                    type="password"
-                    onChange={setPasswordValue}
-                    variant="filled"
-                />
-            </CardContent>
-            <CardActions>
-                <Button color="secondary" variant="text" onClick={signUp}>
-                    Signup
-                </Button>
-                <Button variant="text" onClick={loginWithEmailAndPassword}>
-                    Login
-                </Button>
-                <Button variant="text" onClick={signInWithGoogle}>
-                    Login with Google
-                </Button>
-            </CardActions>
-        </Card>
+        <>
+            {user && <Navigate to="/" replace={true} />}
+            <Card>
+                <CardContent sx={{ '& .MuiTextField-root': { mb: 2 } }}>
+                    <TextField
+                        id="filled-basic"
+                        value={email}
+                        onChange={setEmailValue}
+                        fullWidth
+                        label="Email"
+                        variant="filled"
+                    />
+                    <TextField
+                        id="filled-basic"
+                        label="Password"
+                        value={password}
+                        fullWidth
+                        type="password"
+                        onChange={setPasswordValue}
+                        variant="filled"
+                    />
+                </CardContent>
+                <CardActions>
+                    <Button color="secondary" variant="text" onClick={signUp}>
+                        Signup
+                    </Button>
+                    <Button variant="text" onClick={loginWithEmailAndPassword}>
+                        Login
+                    </Button>
+                    <Button variant="text" onClick={signInWithGoogle}>
+                        Login with Google
+                    </Button>
+                </CardActions>
+            </Card>
+        </>
     );
 };
